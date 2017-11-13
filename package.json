@@ -5,6 +5,7 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "draft-js": "^0.10.4",
+    "draft-js-color-picker": "^1.0.2",
     "install": "^0.10.1",
     "npm": "^5.5.1",
     "react": "^16.0.0",

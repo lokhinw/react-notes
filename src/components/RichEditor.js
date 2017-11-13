@@ -1,8 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {Editor, EditorState, RichUtils, convertToRaw, convertFromRaw} from 'draft-js';
 
-class MyEditor extends React.Component {
+class RichEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -19,9 +18,7 @@ class MyEditor extends React.Component {
   onChange = (editorState) => {
     const contentState = editorState.getCurrentContent();
     this.saveContent(contentState);
-    this.setState({
-      editorState,
-    });
+    this.setState({editorState});
   }
 
   _onBoldClick() {
@@ -32,6 +29,21 @@ class MyEditor extends React.Component {
   }
   _onUnderlineClick() {
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'UNDERLINE'));
+  }
+  _onH1Click() {
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'header-one'));
+  }
+  _onH2Click() {
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'header-two'));
+  }
+  _onH3Click() {
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'header-three'));
+  }
+  _onH4Click() {
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'header-four'));
+  }
+  _onH5Click() {
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'header-five'));
   }
   _onToggleCode = () => {
     this.onChange(RichUtils.toggleCode(this.state.editorState));
@@ -56,6 +68,11 @@ class MyEditor extends React.Component {
         <button onClick={this._onUnderlineClick.bind(this)}>
           <u>u</u>
         </button>
+        <button onClick={this._onH1Click.bind(this)}>H1</button>
+        <button onClick={this._onH2Click.bind(this)}>H2</button>
+        <button onClick={this._onH3Click.bind(this)}>H3</button>
+        <button onClick={this._onH4Click.bind(this)}>H4</button>
+        <button onClick={this._onH5Click.bind(this)}>H5</button>
         <button onClick={this._onToggleCode.bind(this)}>Code Block</button>
         <Editor editorState={this.state.editorState} handleKeyCommand={this.handleKeyCommand} onChange={this.onChange}/>
       </div>
@@ -63,4 +80,4 @@ class MyEditor extends React.Component {
   }
 }
 
-export default MyEditor;
+export default RichEditor;
