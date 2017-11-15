@@ -52,10 +52,9 @@ class ListNotes extends React.Component {
     return (
       <div class="sidebar">
         <button onClick={this.addNote}>Add Note</button>
-        <input ref={(input) => this.name = input} type="text" placeholder="name"/> {/* {data
-          ? <div>{data.map(i => <a href="" key={uniqid()}>{i}</a>)}</div>
-          : <div>no notes</div>} */
-        console.log(data)}
+        <input ref={(input) => this.name = input} type="text" placeholder="name"/> {data
+          ? <div>{Object.keys(data).map(i => <a href="" class="note-item" key={i}>{data[i].title}</a>)}</div>
+          : <div>no notes</div>}
       </div>
     )
   }
