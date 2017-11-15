@@ -1,9 +1,8 @@
 import React from 'react';
+import RichEditor from './RichEditor';
 
 class Note extends React.Component {
   render() {
-    const { details, index } = this.props;
-
     return (
       <RichEditor />
     )

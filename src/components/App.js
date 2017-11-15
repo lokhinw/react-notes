@@ -9,7 +9,7 @@ class App extends Component {
       <div>
       <ListNotes />
         <div class="editor">
-          <RichEditor/>
+          <RichEditor />
         </div>
       </div>
     );
