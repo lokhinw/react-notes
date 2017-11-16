@@ -41,7 +41,8 @@ class ListNotes extends React.Component {
         ? "0" + d.getMinutes()
         : d.getMinutes()).toString() + (d.getHours() >= 12
         ? " PM"
-        : " AM")
+        : " AM"),
+        data: null
     });
 
     this.setState({data});
@@ -53,7 +54,7 @@ class ListNotes extends React.Component {
       <div class="sidebar">
         <button onClick={this.addNote}>Add Note</button>
         <input ref={(input) => this.name = input} type="text" placeholder="name"/> {data
-          ? <div>{Object.keys(data).map(i => <a href="" class="note-item" key={i}>{data[i].title}</a>)}</div>
+          ? <div>{Object.keys(data).map(i => <div><a href="#" class="note-item" key={i}>{data[i].title}</a><span>- {data[i].date} <br />- {data[i].time}</span></div>)}</div>
           : <div>no notes</div>}
       </div>
     )
