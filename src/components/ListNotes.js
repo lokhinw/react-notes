@@ -1,6 +1,5 @@
 import React from 'react';
 import uniqid from 'uniqid';
-import Note from './Note';
 import RichEditor from './RichEditor';
 
 class ListNotes extends React.Component {
@@ -19,6 +18,7 @@ class ListNotes extends React.Component {
     if (this.name.value.replace(/^\s+/, '').replace(/\s+$/, '') === '') {
       alert('your note needs a name!');
     } else {
+      this.state.data = JSON.parse(window.localStorage.getItem('notes'));
       const data = this.state.data;
       const noteId = uniqid();
       const d = new Date();
@@ -52,8 +52,19 @@ class ListNotes extends React.Component {
 
       this.setState({data});
       window.localStorage.setItem('notes', JSON.stringify(data));
+      this.state.noteId = noteId;
     }
     this.name.value = '';
+  }
+  removeNote = (key) => {
+    this.state.data = JSON.parse(window.localStorage.getItem('notes'));
+    const data = this.state.data;
+    delete data[key];
+    this.setState({data});
+    if (key === this.state.noteId) {
+      this.state.noteId = '';
+    }
+    window.localStorage.setItem('notes', JSON.stringify(data));
   }
   selectNote = (key) => {
     this.setState({noteId: key});
@@ -68,6 +79,9 @@ class ListNotes extends React.Component {
           <input ref={(input) => this.name = input} type="text" placeholder="name"/> {data
             ? <div>{Object.keys(data).map(i => <div>
                   <button onClick={this.selectNote.bind(this, i)} class="note-item" key={i}>{data[i].title}</button>
+                  <div>
+                    <a href="#" onClick={this.removeNote.bind(this, i)}>Remove Note</a>
+                  </div>
                   <span>- {data[i].date}
                     <br/>- {data[i].time}</span>
                 </div>)}</div>
