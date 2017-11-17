@@ -4,20 +4,31 @@ import {Editor, EditorState, RichUtils, convertToRaw, convertFromRaw} from 'draf
 class RichEditor extends React.Component {
   constructor(props) {
     super(props);
-    const note = JSON.parse(window.localStorage.getItem('notes'))[props.note];
-    this.state = {
-      note: note
+  }
+  componentWillMount() {
+    this.getNoteId(this.props.note);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.note != nextProps) {
+      this.getNoteId(nextProps.note);
     }
-    if (note.data) {
-      this.state.editorState = EditorState.createWithContent(convertFromRaw(note.data));
+  }
+  getNoteId = (id) => {
+    this.loadNote(JSON.parse(window.localStorage.getItem('notes'))[id]);
+  }
+
+  loadNote = (note) => {
+    if (!!note.data) {
+      this.setState({
+        editorState: EditorState.createWithContent(convertFromRaw(note.data))
+      })
     } else {
-      this.state.editorState = EditorState.createEmpty();
+      this.setState({editorState: EditorState.createEmpty()})
     }
   }
   saveContent = (content) => {
     const notes = JSON.parse(window.localStorage.getItem('notes'));
-    console.log(this.state.note.data);
-    notes[this.props.note].data  = convertToRaw(content);
+    notes[this.props.note].data = convertToRaw(content);
     window.localStorage.setItem('notes', JSON.stringify(notes));
   }
   onChange = (editorState) => {
