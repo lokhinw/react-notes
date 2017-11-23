@@ -10,13 +10,16 @@ class RichEditor extends React.Component {
     this.loadNote(this.props.note);
   }
   componentWillReceiveProps(nextProps) {
-    if (this.props.note != nextProps.note) {
-      this.loadNote(nextProps.note);
+    if (this.props.note != nextProps.note && !nextProps.note) {
+      // this.loadNote(nextProps.note);
     }
   }
   loadNote = (id) => {
+    let note;
     firebase.database().ref('/' + id).on('value', snapshot => {
-      const note = snapshot.val().data;
+      if (snapshot.val()) {
+        note = snapshot.val().data;
+      }
       if (!!note) {
         if (note.entityMap == null) {
           note.entityMap = {}

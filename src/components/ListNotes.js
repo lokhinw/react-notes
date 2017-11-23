@@ -12,10 +12,8 @@ class ListNotes extends React.Component {
 
     this.state = {
       noteId: ''
-      // data: notes
     };
   }
-
   componentDidMount() {
     fire.on('value', snapshot => {
       this.setState({data: snapshot.val()})
@@ -23,17 +21,11 @@ class ListNotes extends React.Component {
       console.log(error)
     })
   }
-
   addNote = () => {
     if (this.name.value.replace(/^\s+/, '').replace(/\s+$/, '') === '') {
       alert('your note needs a name!');
     } else {
-      fire.on('value', snapshot => {
-        this.setState({data: snapshot.val(), noteId: noteId})
-      }, error => {
-        console.log(error)
-      })
-      let data = this.state.data;
+      let data;
       const noteId = uniqid();
       const d = new Date();
       let monthNames = [
@@ -50,10 +42,7 @@ class ListNotes extends React.Component {
         "November",
         "December"
       ];
-      if (!data) {
-        data = {}
-      };
-      data[noteId] = {
+      data = {
         title: this.name.value,
         date: monthNames[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear(),
         time: (d.getHours() > 12
@@ -63,30 +52,25 @@ class ListNotes extends React.Component {
           : d.getMinutes()).toString() + (d.getHours() >= 12
           ? " PM"
           : " AM"),
-          data: null
+        data: null
       };
-
-      this.setState({data});
-      firebase.database().ref('/').set(data);
+      this.state.noteId = noteId;
+      firebase.database().ref('/' + noteId).set(data);
     }
     this.name.value = '';
   }
-  removeNote = (key) => {
+  deselectNote = (key) => {
     if (key === this.state.noteId) {
-      this.setState({noteId: ''});
+       this.setState({noteId: false});
+
     }
-    firebase.database().ref('/').once('value', snapshot => {
-      this.setState({data: snapshot.val()})
-      const data = this.state.data;
-      delete data[key];
-      this.setState({data});
-      firebase.database().ref('/').set(data);
-    }, error => {
-      console.log(error)
-    })
   }
   selectNote = (key) => {
-     this.setState({noteId: key});
+    this.setState({noteId: key});
+  }
+  removeNote = (key) => {
+    this.deselectNote(key);
+    firebase.database().ref('/' + key).set(null);
   }
   render() {
     const data = this.state.data;
