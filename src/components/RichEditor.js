@@ -1,35 +1,42 @@
 import React from 'react';
 import {Editor, EditorState, RichUtils, convertToRaw, convertFromRaw} from 'draft-js';
+import firebase from '../firebase';
+
+var fire = firebase.database().ref('/');
 
 class RichEditor extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+
   componentWillMount() {
-    this.getNoteId(this.props.note);
+    this.loadNote(this.props.note);
   }
   componentWillReceiveProps(nextProps) {
-    if (this.props.note != nextProps) {
-      this.getNoteId(nextProps.note);
+    if (this.props.note != nextProps.note) {
+      this.loadNote(nextProps.note);
     }
   }
-  getNoteId = (id) => {
-    this.loadNote(JSON.parse(window.localStorage.getItem('notes'))[id]);
-  }
-
-  loadNote = (note) => {
-    if (!!note.data) {
-      this.setState({
-        editorState: EditorState.createWithContent(convertFromRaw(note.data))
-      })
-    } else {
-      this.setState({editorState: EditorState.createEmpty()})
-    }
+  loadNote = (id) => {
+    firebase.database().ref('/' + id).on('value', snapshot => {
+      const note = snapshot.val().data;
+      if (!!note) {
+        if (note.entityMap == null) {
+          note.entityMap = {}
+        }
+        this.setState({
+          editorState: EditorState.createWithContent(convertFromRaw(note))
+        })
+      } else {
+        this.setState({editorState: EditorState.createEmpty()});
+      }
+    });
   }
   saveContent = (content) => {
-    const notes = JSON.parse(window.localStorage.getItem('notes'));
-    notes[this.props.note].data = convertToRaw(content);
-    window.localStorage.setItem('notes', JSON.stringify(notes));
+    firebase.database().ref('/' + this.props.note).once('value', snapshot => {
+      const notes = snapshot.val();
+      notes.data = convertToRaw(content);
+      firebase.database().ref('/' + this.props.note).set(notes)
+    }, error => {
+      console.log(error)
+    })
   }
   onChange = (editorState) => {
     const contentState = editorState.getCurrentContent();
@@ -90,7 +97,7 @@ class RichEditor extends React.Component {
         <button onClick={this._onH4Click.bind(this)}>H4</button>
         <button onClick={this._onH5Click.bind(this)}>H5</button>
         <button onClick={this._onToggleCode.bind(this)}>Code Block</button>
-        <Editor editorState={this.state.editorState} handleKeyCommand={this.handleKeyCommand} onChange={this.onChange}/>
+        {this.state && this.state.editorState && <Editor editorState={this.state.editorState} handleKeyCommand={this.handleKeyCommand} onChange={this.onChange}/>}
       </div>
     );
   }

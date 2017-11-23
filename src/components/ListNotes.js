@@ -1,25 +1,39 @@
 import React from 'react';
 import uniqid from 'uniqid';
 import RichEditor from './RichEditor';
+import firebase from '../firebase';
+
+var fire = firebase.database().ref('/');
 
 class ListNotes extends React.Component {
   constructor(props) {
     super(props);
-    let notes = {};
-    if (window.localStorage.getItem("notes")) {
-      notes = JSON.parse(window.localStorage.getItem('notes'));
-    }
+    var notes = {};
+
     this.state = {
-      noteId: '',
-      data: notes
+      noteId: ''
+      // data: notes
     };
   }
+
+  componentDidMount() {
+    fire.on('value', snapshot => {
+      this.setState({data: snapshot.val()})
+    }, error => {
+      console.log(error)
+    })
+  }
+
   addNote = () => {
     if (this.name.value.replace(/^\s+/, '').replace(/\s+$/, '') === '') {
       alert('your note needs a name!');
     } else {
-      this.state.data = JSON.parse(window.localStorage.getItem('notes'));
-      const data = this.state.data;
+      fire.on('value', snapshot => {
+        this.setState({data: snapshot.val(), noteId: noteId})
+      }, error => {
+        console.log(error)
+      })
+      let data = this.state.data;
       const noteId = uniqid();
       const d = new Date();
       let monthNames = [
@@ -36,8 +50,10 @@ class ListNotes extends React.Component {
         "November",
         "December"
       ];
-
-      data[noteId] = ({
+      if (!data) {
+        data = {}
+      };
+      data[noteId] = {
         title: this.name.value,
         date: monthNames[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear(),
         time: (d.getHours() > 12
@@ -47,38 +63,40 @@ class ListNotes extends React.Component {
           : d.getMinutes()).toString() + (d.getHours() >= 12
           ? " PM"
           : " AM"),
-        data: null
-      });
+          data: null
+      };
 
       this.setState({data});
-      window.localStorage.setItem('notes', JSON.stringify(data));
-      this.state.noteId = noteId;
+      firebase.database().ref('/').set(data);
     }
     this.name.value = '';
   }
   removeNote = (key) => {
-    this.state.data = JSON.parse(window.localStorage.getItem('notes'));
-    const data = this.state.data;
-    delete data[key];
-    this.setState({data});
     if (key === this.state.noteId) {
-      this.state.noteId = '';
+      this.setState({noteId: ''});
     }
-    window.localStorage.setItem('notes', JSON.stringify(data));
+    firebase.database().ref('/').once('value', snapshot => {
+      this.setState({data: snapshot.val()})
+      const data = this.state.data;
+      delete data[key];
+      this.setState({data});
+      firebase.database().ref('/').set(data);
+    }, error => {
+      console.log(error)
+    })
   }
   selectNote = (key) => {
-    this.setState({noteId: key});
-
+     this.setState({noteId: key});
   }
   render() {
     const data = this.state.data;
     return (
       <div>
-        <div class="sidebar">
+        <div className="sidebar">
           <button onClick={this.addNote}>Add Note</button>
           <input ref={(input) => this.name = input} type="text" placeholder="name"/> {data
             ? <div>{Object.keys(data).map(i => <div>
-                  <button onClick={this.selectNote.bind(this, i)} class="note-item" key={i}>{data[i].title}</button>
+                  <button onClick={this.selectNote.bind(this, i)} className="note-item" key={i}>{data[i].title}</button>
                   <div>
                     <a href="#" onClick={this.removeNote.bind(this, i)}>Remove Note</a>
                   </div>
@@ -88,8 +106,8 @@ class ListNotes extends React.Component {
             : <div>no notes</div>}
         </div>
         <div class="editor">
-          {/* <RichEditor note={this.state.noteId} /> */}
-          {!!this.state.noteId
+          {this.state.noteId}
+          {this.state.noteId
             ? <RichEditor note={this.state.noteId}/>
             : 'no note selected'}
         </div>

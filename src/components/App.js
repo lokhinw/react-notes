@@ -8,9 +8,9 @@ class App extends Component {
     return (
       <div>
       <ListNotes />
-        {/* <div class="editor">
-          <RichEditor note="ja1hvkh7"/>
-        </div> */}
+        <div class="editor">
+          {/* <RichEditor note="jabhgmjj"/> */}
+        </div>
       </div>
     );
   }
