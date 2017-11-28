@@ -61,8 +61,7 @@ class ListNotes extends React.Component {
   }
   deselectNote = (key) => {
     if (key === this.state.noteId) {
-       this.setState({noteId: false});
-
+      this.setState({noteId: ''});
     }
   }
   selectNote = (key) => {
@@ -75,25 +74,28 @@ class ListNotes extends React.Component {
   render() {
     const data = this.state.data;
     return (
-      <div>
-        <div className="sidebar">
-          <button onClick={this.addNote}>Add Note</button>
-          <input ref={(input) => this.name = input} type="text" placeholder="name"/> {data
-            ? <div>{Object.keys(data).map(i => <div>
-                  <button onClick={this.selectNote.bind(this, i)} className="note-item" key={i}>{data[i].title}</button>
-                  <div>
-                    <a href="#" onClick={this.removeNote.bind(this, i)}>Remove Note</a>
-                  </div>
-                  <span>- {data[i].date}
-                    <br/>- {data[i].time}</span>
-                </div>)}</div>
-            : <div>no notes</div>}
+      <div class="grid-x">
+        <div class="small-12 large-3 cell">
+          <div className="sidebar">
+            <div className="add-note">
+              <input ref={(input) => this.name = input} name="note-name" id="note-name" type="text" placeholder="name"/>
+              <a id="add-note-submit" className="button" onClick={this.addNote}>Add Note</a>
+            </div>
+            {data
+              ? <div>{Object.keys(data).map(i => <div className="note-item">
+                    <i class="fa fa-file-text" aria-hidden="true"></i>
+                    <button onClick={this.selectNote.bind(this, i)} key={i}>{data[i].title}</button>
+                    <a href="#" class="x-button" onClick={this.removeNote.bind(this, i)}>&times;</a>
+                  </div>)}</div>
+              : ''}
+          </div>
         </div>
-        <div class="editor">
-          {this.state.noteId}
-          {this.state.noteId
-            ? <RichEditor note={this.state.noteId}/>
-            : 'no note selected'}
+        <div class="small-12 large-9 cell">
+          <div class="editor">
+            {this.state.noteId
+              ? <RichEditor note={this.state.noteId}/>
+              : ''}
+          </div>
         </div>
       </div>
     )

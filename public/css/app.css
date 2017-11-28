@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab');
+@import url('https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700');
+.container {}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sidebar {
+  margin-top: 2.5px;
+  background: #fff;
+}
+
+@media only screen and (min-width: 64rem) {
+  .sidebar {
+    min-height: 100vh;
+    border-right: 2px solid #efefef;
+  }
+}
+
+.add-note {
+  padding: 1rem 1.5rem;
+  font-family: Roboto Slab;
+}
+
+.add-note a, .add-note a:hover, .add-note a:active {
+  text-align: center;
+  background: #3498db;
+  color: #fff;
+  width: 100%;
+  border-radius: 3px;
+  margin-bottom: 0;
+}
+
+.note-item {
+  font-family: Roboto Slab;
+  padding: 0 1.5rem;
+  border-top: 2px solid #efefef;
+}
+
+.note-item:last-of-type {
+  border-bottom: 2px solid #efefef;
+}
+
+.editor {
+  padding: 1rem 1.5rem;
+  background: #fff;
+  margin-top: 2.5px;
+  min-height: 100vh;
+}
+
+.top-bar {
+  box-shadow: 0px 0px 5px 0px #3498db;
+}
+
+.top-bar, .top-bar ul, .top-bar ul li {
+  background: #3498db;
+}
+
+.top-bar-left .menu-text {
+  font-family: Roboto Slab;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.fa-file-text {
+  margin-right: 0.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.x-button {
+  margin-left: 0.5rem;
+  color: #555;
+}
+
+.x-button:hover, .x-button:active {
+  color: #000;
+}
+
+.wysiwyg-controls {
+  font-family: 'PT Serif';
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding: 2px 0;
+  border-top: 6px solid #3498db;
+  border-bottom: 2px solid #efefef;
+}
+
+.wysiwyg-controls-box {
+  border-right: 2px solid #efefef;
+  margin: 10px 0;
+}
+
+.wysiwyg-controls-box:first-of-type .wysiwyg-controls a:first-of-type {
+  margin-left: 0;
+}
+
+.wysiwyg-controls a, .wysiwyg-controls a:hover, .wysiwyg-controls a:active, .wysiwyg-controls button {
+  color: #000;
+  margin: 0 0.75rem;
+}

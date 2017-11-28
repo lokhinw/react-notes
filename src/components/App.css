@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+body {
+  font-family: Raleway;
+}
+
 .App {
   text-align: center;
 }
@@ -37,4 +43,14 @@
 
 .editor {
   margin-left: 25%;
+  position: absolute;
+  top: 45px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  padding-left: 25px;
+  background: #3498db;
+  height: 45px;
 }
