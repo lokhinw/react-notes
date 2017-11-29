@@ -1,5 +1,30 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Slab');
 @import url('https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700');
+.home {
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.home .title{
+  position: relative;
+  font-family: Roboto Slab;
+  font-size: 4rem;
+  background: #3498db;
+  color: #fff;
+  padding: 2rem;
+}
+.home .title:after {
+  content: " ";
+  position: absolute;
+  z-index: 1000;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  border: 5px solid #fff;
+}
 .container {}
 
 .App {
@@ -129,4 +154,60 @@
 .wysiwyg-controls a, .wysiwyg-controls a:hover, .wysiwyg-controls a:active, .wysiwyg-controls button {
   color: #000;
   margin: 0 0.75rem;
+}
+
+.form-box {
+  height: 90vh;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+.form-box .top {
+  background: #3498db;
+  border-radius: 3px;
+}
+
+.form-box .top h1 {
+  color: #fff;
+  font-family: Roboto Slab;
+  text-align: center;
+  font-weight: 300;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.form-box .bottom {
+  background: #efefef;
+  padding-top: 1rem;
+}
+
+.form-box input {
+  width: 90%;
+  display: inline-block;
+}
+
+.form-box .form-group {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.form-box .bottom button {
+  text-align: center;
+  background: #3498db;
+  color: #fff;
+  width: 90%;
+  border-radius: 3px;
+}
+
+.alert {
+  margin-bottom: 1rem;
+}
+
+.menu li a, .menu li a:hover, .menu li a:active {
+  font-family: Roboto Slab;
+  color: #fff;
 }

@@ -1,9 +1,7 @@
 import React from 'react';
 import uniqid from 'uniqid';
 import RichEditor from './RichEditor';
-import firebase from '../firebase';
-
-var fire = firebase.database().ref('/');
+import firebase, {firebaseAuth} from '../firebase';
 
 class ListNotes extends React.Component {
   constructor(props) {
@@ -15,7 +13,7 @@ class ListNotes extends React.Component {
     };
   }
   componentDidMount() {
-    fire.on('value', snapshot => {
+    firebase.database().ref('/users/' + firebaseAuth().currentUser.uid + '/notes/').on('value', snapshot => {
       this.setState({data: snapshot.val()})
     }, error => {
       console.log(error)
@@ -55,7 +53,7 @@ class ListNotes extends React.Component {
         data: null
       };
       this.state.noteId = noteId;
-      firebase.database().ref('/' + noteId).set(data);
+      firebase.database().ref('/users/' + firebaseAuth().currentUser.uid + '/notes/' + noteId).set(data);
     }
     this.name.value = '';
   }
@@ -69,7 +67,7 @@ class ListNotes extends React.Component {
   }
   removeNote = (key) => {
     this.deselectNote(key);
-    firebase.database().ref('/' + key).set(null);
+    firebase.database().ref('/users/' + firebaseAuth().currentUser.uid + '/notes/' +  key).set(null);
   }
   render() {
     const data = this.state.data;

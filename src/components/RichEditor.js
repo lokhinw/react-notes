@@ -3,16 +3,14 @@ import {EditorState, RichUtils, convertToRaw, convertFromRaw} from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import createUndoPlugin from 'draft-js-undo-plugin';
-import firebase from '../firebase';
+import firebase, {firebaseAuth} from '../firebase';
 
 const undoPlugin = createUndoPlugin();
-const { UndoButton, RedoButton } = undoPlugin;
+const {UndoButton, RedoButton} = undoPlugin;
 const linkifyPlugin = createLinkifyPlugin();
 
 var fire = firebase.database().ref('/');
-
 class RichEditor extends React.Component {
-
   componentWillMount() {
     this.loadNote(this.props.note);
   }
@@ -23,7 +21,7 @@ class RichEditor extends React.Component {
   }
   loadNote = (id) => {
     let note;
-    firebase.database().ref('/' + id).on('value', snapshot => {
+    firebase.database().ref('/users/' + firebaseAuth().currentUser.uid + '/notes/' + id).on('value', snapshot => {
       if (snapshot.val()) {
         note = snapshot.val().data;
       }
@@ -40,10 +38,10 @@ class RichEditor extends React.Component {
     });
   }
   saveContent = (content) => {
-    firebase.database().ref('/' + this.props.note).once('value', snapshot => {
+    firebase.database().ref('/users/' + firebaseAuth().currentUser.uid + '/notes/' + this.props.note).once('value', snapshot => {
       const notes = snapshot.val();
       notes.data = convertToRaw(content);
-      firebase.database().ref('/' + this.props.note).set(notes)
+      firebase.database().ref('/users/' + firebaseAuth().currentUser.uid + '/notes/' + this.props.note).set(notes)
     }, error => {
       console.log(error)
     })
@@ -92,9 +90,7 @@ class RichEditor extends React.Component {
   }
 
   render() {
-    const styleMap = {
-
-    };
+    const styleMap = {};
 
     return (
       <div>
@@ -138,10 +134,10 @@ class RichEditor extends React.Component {
             <a onClick={this._onH4Click.bind(this)}>H4</a>
             <a onClick={this._onH5Click.bind(this)}>H5</a>
           </span>
-<span class="wysiwyg-controls-box">
-  <UndoButton />
-<RedoButton />
-</span>
+          <span class="wysiwyg-controls-box">
+            <UndoButton/>
+            <RedoButton/>
+          </span>
         </div>
         {this.state && this.state.editorState && <Editor plugins={[linkifyPlugin, undoPlugin]} customStyleMap={styleMap} editorState={this.state.editorState} handleKeyCommand={this.handleKeyCommand} onChange={this.onChange}/>}
       </div>
